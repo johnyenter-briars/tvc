@@ -1,0 +1,21 @@
+[Unit]
+Description=CEC HTTP Server (tvc)
+After=network.target
+
+[Service]
+Type=simple
+User=cecsvc
+Group=cecsvc
+
+ExecStart=/opt/tvc/tvc
+WorkingDirectory=/opt/tvc
+
+Restart=on-failure
+RestartSec=2
+
+# Optional environment
+Environment=RUST_LOG=info
+
+[Install]
+WantedBy=multi-user.target
+
