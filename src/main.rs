@@ -1,26 +1,22 @@
-use actix_web::{App, HttpRequest, HttpServer, middleware::Logger, web};
+use actix_web::{App, HttpServer, middleware::Logger};
 use tvc::routes::commands::power_off;
 
-async fn index(req: HttpRequest) -> &'static str {
-    println!("REQ: {req:?}");
-    "Hello world!"
-}
+const PORT: u16 = 8080;
+const DOMAIN: &str = "0.0.0.0";
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("starting HTTP server at http://{}:{}", DOMAIN, PORT);
 
     HttpServer::new(|| {
         App::new()
-            .service(web::resource("/index.html").to(|| async { "Hello world!" }))
-            .service(web::resource("/").to(index))
             .service(power_off)
             .wrap(Logger::new("%a %{User-Agent}i %r %s %U %{Content-Type}i"))
 
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind((DOMAIN, PORT))?
     .run()
     .await
 }
