@@ -89,7 +89,7 @@ pub async fn toggle_mute() -> HttpResponse {
     run_cec(crate::cec::commands::toggle_mute).await
 }
 
-#[post("/api/register_playback/{source_physical_address_number}")]
+#[post("/api/active_source/{source_physical_address_number}")]
 pub async fn active_source(source_physical_address_number: web::Path<String>) -> HttpResponse {
     let p: u8 = source_physical_address_number.parse::<u8>().unwrap();
 
