@@ -1,8 +1,6 @@
 use actix_web::{App, HttpServer, middleware::Logger};
-use tvc::routes::commands::power_off;
+use tvc::{DOMAIN, PORT, routes::commands::{power_off, power_on, toggle_mute, volume_down, volume_up}};
 
-const PORT: u16 = 8080;
-const DOMAIN: &str = "0.0.0.0";
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -13,8 +11,11 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(power_off)
+            .service(power_on)
+            .service(volume_up)
+            .service(volume_down)
+            .service(toggle_mute)
             .wrap(Logger::new("%a %{User-Agent}i %r %s %U %{Content-Type}i"))
-
     })
     .bind((DOMAIN, PORT))?
     .run()

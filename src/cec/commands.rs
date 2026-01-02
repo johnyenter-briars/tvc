@@ -56,3 +56,15 @@ pub fn volume_down() -> io::Result<()> {
 
     run_cec_ctl(&["--to", "0", "--user-control-released"])
 }
+
+pub fn toggle_mute() -> io::Result<()> {
+    run_cec_ctl(&["--to", "0", "--user-control-pressed", "ui-cmd=mute"])?;
+
+    run_cec_ctl(&["--to", "0", "--user-control-released"])
+}
+
+pub fn active_source(source_physical_address_number: u8) -> io::Result<()> {
+    let physical_address_param = format!("phys-addr={}.0.0.0", source_physical_address_number);
+
+    run_cec_ctl(&["--active-source", &physical_address_param])
+}
