@@ -7,3 +7,14 @@
 - TVC has been tested against a [Raspberry Pi Zero](https://www.raspberrypi.com/products/raspberry-pi-zero/)
 - TVC assumes it's running in the context of a 'cecsvc' service account - which has been given sudo permissions to the binary `cec-ctl`
     - See the systemd service file at [tvc.service](./setup/tvc.service)
+
+## Configuration
+
+TVC expects a `tvc.config.json` file in the current working directory when it runs.
+
+```json
+{
+  "port": 8081,
+  "use_sudo": true
+}
+```

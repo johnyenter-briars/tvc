@@ -1,8 +1,26 @@
 use std::io;
 use std::process::Command;
+use std::sync::OnceLock;
+
+static USE_SUDO: OnceLock<bool> = OnceLock::new();
+
+pub fn set_use_sudo(use_sudo: bool) {
+    let _ = USE_SUDO.set(use_sudo);
+}
+
+fn use_sudo() -> bool {
+    USE_SUDO
+        .get()
+        .copied()
+        .expect("use_sudo must be initialized before running cec commands")
+}
 
 fn run_cec_ctl(args: &[&str]) -> io::Result<()> {
-    let output = Command::new("sudo").arg("cec-ctl").args(args).output()?;
+    let output = if use_sudo() {
+        Command::new("sudo").arg("cec-ctl").args(args).output()?
+    } else {
+        Command::new("cec-ctl").args(args).output()?
+    };
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     let stderr = String::from_utf8_lossy(&output.stderr);
